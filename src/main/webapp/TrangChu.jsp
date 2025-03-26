@@ -54,7 +54,7 @@ body {
 		<div
 			class="container d-flex justify-content-between align-items-center">
 			<a class="navbar-brand fw-bold d-flex align-items-center" href="#">
-				🏨 Đạt Phòng Khách Sạn </a>
+				🏨 Đặt Phòng Khách Sạn </a>
 			<div class="d-flex align-items-center">
 				<%
 				Object s = session.getAttribute("khachHang");
@@ -66,7 +66,8 @@ body {
 				} else {
 				%>
 				<span class="fw-bold me-2">Xin chào, <%=kh.getTenKhachHang()%></span>
-				<a href="DangXuatServlet" class="btn btn-primary btn-sm">Đăng xuất</a>
+				<a href="DangXuatServlet" class="btn btn-primary btn-sm">Đăng
+					xuất</a>
 				<%
 				}
 				%>
@@ -78,12 +79,12 @@ body {
 	<!-- Bộ lọc khu vực -->
 	<div class="container">
 		<div class="filter-container mb-4">
-			<form action="HotelServlet" method="GET">
+			<form action="LocDiaChiServlet" method="GET">
 				<div class="row align-items-center">
 					<div class="col-md-4">
 						<label class="fw-bold">Chọn khu vực:</label> <select name="khuVuc"
 							class="form-select">
-							<option value="">Tất cả khu vực</option>
+							<option value="tatCaKhuVuc">Tất cả khu vực</option>
 							<%
 							List<String> ds = Arrays.asList("An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh",
 									"Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng",
@@ -91,11 +92,11 @@ body {
 									"Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum",
 									"Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận",
 									"Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La",
-									"Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP. Hồ Chí Minh",
-									"Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái");
+									"Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP. HCM", "Trà Vinh",
+									"Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái");
 							for (String t : ds) {
 							%>
-							<option value="tinhThanh"><%=t%></option>
+							<option value="<%=t%>"><%=t%></option>
 							<%
 							}
 							%>
@@ -113,30 +114,42 @@ body {
 	<div class="container">
 		<div class="row">
 			<%
-			List<KhachSan> dsKhachSan = KhachSanDao.getInstance().layDanhSach();
+			List<KhachSan> dsKhachSan;
+			List<KhachSan> tmp = (List) request.getAttribute("DK");
+			if (tmp != null)
+				dsKhachSan = tmp;
+			else {
+				dsKhachSan = KhachSanDao.getInstance().layDanhSach();
+			}
 			if (dsKhachSan != null && !dsKhachSan.isEmpty()) {
 				for (KhachSan ks : dsKhachSan) {
 			%>
 			<div class="col-md-4 mb-4">
-				<div class="card shadow-sm">
-					<img
-						src="<%=request.getContextPath()%>/pic/KS/<%=ks.getHinhAnh()%>.jpg"
-						class="card-img-top hotel-img" alt="Hình ảnh khách sạn">
-					<div class="card-body">
-						<h5 class="card-title fw-bold"><%=ks.getTenKhachSan()%></h5>
-						<p class="card-text">
-							<i class="bi bi-geo-alt"></i>
-							<%=ks.getDiaChi()%></p>
-						<p class="card-text">
-							<strong>Khu vực:</strong>
-							<%=ks.getKhuVuc()%></p>
-						<p class="card-text"><%=ks.getMoTa()%></p>
-						<p class="card-text text-warning">
-							⭐ Đánh giá: <strong><%=ks.getDanhGiaTrungBinh()%></strong>
-						</p>
+				<a href="ChiTietPhongKhachSan.jsp?id=<%=ks.getMaKhachSan()%>"
+					class="text-decoration-none text-dark">
+					<div class="card shadow-sm">
+						<img
+							src="<%=request.getContextPath()%>/pic/KS/<%=ks.getHinhAnh()%>"
+							class="card-img-top hotel-img" alt="Hình ảnh khách sạn">
+						<div class="card-body">
+							<h5 class="card-title fw-bold"><%=ks.getTenKhachSan()%></h5>
+							<p class="card-text">
+								<i class="bi bi-geo-alt"></i>
+								<%=ks.getDiaChi()%>
+							</p>
+							<p class="card-text">
+								<strong>Khu vực:</strong>
+								<%=ks.getKhuVuc()%>
+							</p>
+							<p class="card-text"><%=ks.getMoTa()%></p>
+							<p class="card-text text-warning">
+								⭐ Đánh giá: <strong><%=ks.getDanhGiaTrungBinh()%></strong>
+							</p>
+						</div>
 					</div>
-				</div>
+				</a>
 			</div>
+
 			<%
 			}
 			} else {

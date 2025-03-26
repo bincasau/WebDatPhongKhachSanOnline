@@ -44,7 +44,7 @@
 
     <div class="register-container">
         <h3 class="text-center text-danger fw-bold">Đăng ký tài khoản</h3>
-        <form action="RegisterServlet" method="POST">
+        <form action="DangKyServlet" method="POST">
             <div class="mb-3">
                 <label class="form-label">Tài khoản</label>
                 <input type="text" class="form-control" name="username" placeholder="Nhập tài khoản" required>

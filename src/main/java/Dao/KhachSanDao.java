@@ -63,8 +63,60 @@ public class KhachSanDao implements InterfaceDao<KhachSan>{
 	}
 
 	@Override
-	public List<KhachSan> layDanhSachTheoDK(String dk) {
-		// TODO Auto-generated method stub
+	public List<KhachSan> layDanhSachTheoDK(String diaChi) {
+		List<KhachSan> ds = new ArrayList<>();
+		Connection conn = JDBCUtil.connect();
+		String sql = "select * from khachsan where khuVuc = ?" ;
+		if(conn != null) {
+			try {
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, diaChi);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next()) {
+					KhachSan ks = new KhachSan(rs.getString("maKhachSan"), 
+												rs.getString("tenKhachSan"), 
+												rs.getString("diaChi"), 
+												rs.getString("khuVuc"), 
+												rs.getString("moTa"), 
+												rs.getDouble("danhGiaTrungBinh"), 
+												rs.getString("maQuanLy"), 
+												rs.getString("hinhAnh"));
+					ds.add(ks);
+				}
+				JDBCUtil.closeConnection();
+				return ds;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	public List<KhachSan> layDanhSachTheoID(String id){
+		List<KhachSan> ds = new ArrayList<>();
+		Connection conn = JDBCUtil.connect();
+		String sql = "select * from khachsan where maKhachSan = ?" ;
+		if(conn != null) {
+			try {
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, id);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next()) {
+					KhachSan ks = new KhachSan(rs.getString("maKhachSan"), 
+												rs.getString("tenKhachSan"), 
+												rs.getString("diaChi"), 
+												rs.getString("khuVuc"), 
+												rs.getString("moTa"), 
+												rs.getDouble("danhGiaTrungBinh"), 
+												rs.getString("maQuanLy"), 
+												rs.getString("hinhAnh"));
+					ds.add(ks);
+				}
+				JDBCUtil.closeConnection();
+				return ds;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 
