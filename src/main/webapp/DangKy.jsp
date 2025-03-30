@@ -44,37 +44,43 @@
 
     <div class="register-container">
         <h3 class="text-center text-danger fw-bold">Đăng ký tài khoản</h3>
+        <% 
+        	String thongBao = request.getAttribute("thongBaoLoiDangKy")+"";
+        	if(thongBao.equals("null")) thongBao = "";
+        %>
+            <!-- Tài khoản -->
+          	 <%= thongBao %>
         <form action="DangKyServlet" method="POST">
             <div class="mb-3">
                 <label class="form-label">Tài khoản</label>
-                <input type="text" class="form-control" name="username" placeholder="Nhập tài khoản" required>
+                <input type="text" class="form-control" name="taiKhoan" placeholder="Nhập tài khoản" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Mật khẩu</label>
-                <input type="password" class="form-control" name="password" placeholder="Nhập mật khẩu" required>
+                <input type="password" class="form-control" name="matKhau" placeholder="Nhập mật khẩu" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Tên khách hàng</label>
-                <input type="text" class="form-control" name="fullname" placeholder="Nhập họ và tên" required>
+                <input type="text" class="form-control" name="tenKhachHang" placeholder="Nhập họ và tên" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Số điện thoại</label>
-                <input type="text" class="form-control" name="phone" placeholder="Nhập số điện thoại" required>
+                <input type="text" class="form-control" name="soDienThoai" placeholder="Nhập số điện thoại" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Ngày sinh</label>
-                <input type="date" class="form-control" name="birthdate" required>
+                <input type="date" class="form-control" name="ngaySinh" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Giới tính</label>
-                <select class="form-select" name="gender">
+                <select class="form-select" name="gioiTinh">
                     <option value="true">Nam</option>
                     <option value="false">Nữ</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label class="form-label">Số CCCD</label>
-                <input type="text" class="form-control" name="cccd" placeholder="Nhập số CCCD" required>
+                <input type="text" class="form-control" name="soCCCD" placeholder="Nhập số CCCD" required>
             </div>
             <button type="submit" class="btn btn-register w-100 text-white fw-bold">Đăng ký</button>
         </form>
