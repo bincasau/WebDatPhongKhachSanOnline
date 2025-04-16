@@ -2,25 +2,33 @@ package model;
 
 import java.sql.Date;
 
-public class DatPhong {
+public class ThongTinDatPhong {
 	private String maDatPhong;
 	private Date ngayDatPhong;
 	private Date ngayNhanPhong;
 	private Date ngayTraPhong;
 	private String ghiChu;
+	private int tgSuDung;
+	private float thanhTien;
+	private String trangThai;
+	private Date ngayHoaDon;
 	private String maPhong;
 	private String maKhachHang;
-	public DatPhong() {
+	public ThongTinDatPhong() {
 		super();
 	}
-	public DatPhong(String maDatPhong, Date ngayDatPhong, Date ngayNhanPhong, Date ngayTraPhong, String ghiChu,
-			String maPhong, String maKhachHang) {
+	public ThongTinDatPhong(String maDatPhong, Date ngayDatPhong, Date ngayNhanPhong, Date ngayTraPhong, String ghiChu,
+			int tgSuDung, float thanhTien, String trangThai, Date ngayHoaDon, String maPhong, String maKhachHang) {
 		super();
 		this.maDatPhong = maDatPhong;
 		this.ngayDatPhong = ngayDatPhong;
 		this.ngayNhanPhong = ngayNhanPhong;
 		this.ngayTraPhong = ngayTraPhong;
 		this.ghiChu = ghiChu;
+		this.tgSuDung = tgSuDung;
+		this.thanhTien = thanhTien;
+		this.trangThai = trangThai;
+		this.ngayHoaDon = ngayHoaDon;
 		this.maPhong = maPhong;
 		this.maKhachHang = maKhachHang;
 	}
@@ -53,6 +61,30 @@ public class DatPhong {
 	}
 	public void setGhiChu(String ghiChu) {
 		this.ghiChu = ghiChu;
+	}
+	public int getTgSuDung() {
+		return tgSuDung;
+	}
+	public void setTgSuDung(int tgSuDung) {
+		this.tgSuDung = tgSuDung;
+	}
+	public float getThanhTien() {
+		return thanhTien;
+	}
+	public void setThanhTien(float thanhTien) {
+		this.thanhTien = thanhTien;
+	}
+	public String getTrangThai() {
+		return trangThai;
+	}
+	public void setTrangThai(String trangThai) {
+		this.trangThai = trangThai;
+	}
+	public Date getNgayHoaDon() {
+		return ngayHoaDon;
+	}
+	public void setNgayHoaDon(Date ngayHoaDon) {
+		this.ngayHoaDon = ngayHoaDon;
 	}
 	public String getMaPhong() {
 		return maPhong;

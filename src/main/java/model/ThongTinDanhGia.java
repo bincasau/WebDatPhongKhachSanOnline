@@ -1,15 +1,15 @@
 package model;
 
-public class DanhGia {
+public class ThongTinDanhGia {
 	private String maDanhGia;
 	private int soSao;
 	private String moTa;
 	private String maKhachHang;
 	private String maKhachSan;
-	public DanhGia() {
+	public ThongTinDanhGia() {
 		super();
 	}
-	public DanhGia(String maDanhGia, int soSao, String moTa, String maKhachHang, String maKhachSan) {
+	public ThongTinDanhGia(String maDanhGia, int soSao, String moTa, String maKhachHang, String maKhachSan) {
 		super();
 		this.maDanhGia = maDanhGia;
 		this.soSao = soSao;
