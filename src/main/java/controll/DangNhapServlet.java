@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Dao.SHA1;
 import Util.JDBCUtil;
 import model.KhachHang;
 
@@ -45,7 +46,7 @@ public class DangNhapServlet extends HttpServlet {
 				String sql = "select * from khachhang where taiKhoan = ? and matKhau = ?";
 				PreparedStatement stmt = conn.prepareStatement(sql);
 				stmt.setString(1, taiKhoan);
-                stmt.setString(2, matKhau);
+                stmt.setString(2, SHA1.toSHA1(matKhau));
                 ResultSet rs = stmt.executeQuery();
                 if(rs.next()) {
                 	HttpSession session = request.getSession();
