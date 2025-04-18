@@ -24,7 +24,7 @@ public class DatPhongServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         KhachHang kh = (KhachHang) session.getAttribute("khachHang");
-
+        String maKhachSan = request.getParameter("maKhachSan") + "";
         String maPhong = request.getParameter("maPhong");
         String giaPhongStr = request.getParameter("giaPhong");
         double giaPhong = 0;
@@ -42,6 +42,7 @@ public class DatPhongServlet extends HttpServlet {
         } else {
             request.setAttribute("maPhong", maPhong);
             request.setAttribute("giaPhong", giaPhong);
+            request.setAttribute("maKhachSan", maKhachSan);
             request.getRequestDispatcher("FormDatPhong.jsp").forward(request, response);
         }
     }

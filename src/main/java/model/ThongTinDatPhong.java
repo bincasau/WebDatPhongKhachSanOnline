@@ -13,12 +13,14 @@ public class ThongTinDatPhong {
 	private String trangThai;
 	private Date ngayHoaDon;
 	private String maPhong;
+	private String maKhachSan;
 	private String maKhachHang;
 	public ThongTinDatPhong() {
 		super();
 	}
 	public ThongTinDatPhong(String maDatPhong, Date ngayDatPhong, Date ngayNhanPhong, Date ngayTraPhong, String ghiChu,
-			int tgSuDung, float thanhTien, String trangThai, Date ngayHoaDon, String maPhong, String maKhachHang) {
+			int tgSuDung, float thanhTien, String trangThai, Date ngayHoaDon, String maPhong, String maKhachSan,
+			String maKhachHang) {
 		super();
 		this.maDatPhong = maDatPhong;
 		this.ngayDatPhong = ngayDatPhong;
@@ -30,6 +32,7 @@ public class ThongTinDatPhong {
 		this.trangThai = trangThai;
 		this.ngayHoaDon = ngayHoaDon;
 		this.maPhong = maPhong;
+		this.maKhachSan = maKhachSan;
 		this.maKhachHang = maKhachHang;
 	}
 	public String getMaDatPhong() {
@@ -91,6 +94,12 @@ public class ThongTinDatPhong {
 	}
 	public void setMaPhong(String maPhong) {
 		this.maPhong = maPhong;
+	}
+	public String getMaKhachSan() {
+		return maKhachSan;
+	}
+	public void setMaKhachSan(String maKhachSan) {
+		this.maKhachSan = maKhachSan;
 	}
 	public String getMaKhachHang() {
 		return maKhachHang;

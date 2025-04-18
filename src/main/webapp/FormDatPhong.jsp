@@ -27,7 +27,7 @@
     if (maPhongObj != null) {
         maPhong = maPhongObj.toString();
     }
-
+	String maKhachSan = request.getAttribute("maKhachSan")+"";
     String e_message = (request.getAttribute("e_message") != null) ? request.getAttribute("e_message").toString() : "";
 %>
 
@@ -36,7 +36,9 @@
     <h2 class="text-center">Đặt Phòng</h2>
 
     <form id="datPhongForm" method="post" action="XacNhanDatPhongServlet">
+    	
         <input type="hidden" name="giaPhong" id="giaPhong" value="<%= giaPhong %>">
+        <input type="hidden" name="maKhachSan" id="maKhachSan" value="<%= maKhachSan %>">
 
         <div class="mb-3">
             <label>Họ và tên:</label>

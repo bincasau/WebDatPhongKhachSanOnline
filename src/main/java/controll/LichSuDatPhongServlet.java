@@ -35,7 +35,6 @@ public class LichSuDatPhongServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
         KhachHang kh = (KhachHang) session.getAttribute("khachHang");
-
         if (kh == null) {
             response.sendRedirect("DangNhap.jsp");
             return;
@@ -43,6 +42,8 @@ public class LichSuDatPhongServlet extends HttpServlet {
 
         List<ThongTinDatPhong> lichSu = ThongTinDatPhongDao.getInstance().layDanhSachTheoDK(kh.getMaKhachHang());
         request.setAttribute("lichSuDatPhong", lichSu);
+        String message = request.getAttribute("message")+"";
+        request.setAttribute("message", message);
         request.getRequestDispatcher("LichSuDatPhong.jsp").forward(request, response);
 	}
 

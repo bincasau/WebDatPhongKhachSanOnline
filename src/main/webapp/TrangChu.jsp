@@ -106,7 +106,7 @@ body {
 					</button>
 					<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
 						<li><a class="dropdown-item" href="SuaThongTinTaiKhoan.jsp">Sửa thông tin</a></li>
-						<li><a class="dropdown-item" href="LichSuDatPhongServlet">Lịch sử đặt hàng</a></li>
+						<li><a class="dropdown-item" href="LichSuDatPhongServlet">Lịch sử đặt phòng</a></li>
 						<li><a class="dropdown-item" href="DoiMatKhau.jsp">Đổi mật khẩu</a></li>
 						<li><hr class="dropdown-divider"></li>
 						<li><a class="dropdown-item text-danger" href="DangXuatServlet">Đăng xuất</a></li>
