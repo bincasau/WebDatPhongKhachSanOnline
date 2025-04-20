@@ -118,8 +118,34 @@ public class KhachHangDao implements InterfaceDao<KhachHang> {
 
 	@Override
 	public List<KhachHang> layDanhSach() {
-		// TODO Auto-generated method stub
-		return null;
+		List<KhachHang> ds = new ArrayList<>();
+		Connection conn = JDBCUtil.connect(); // Kết nối với cơ sở dữ liệu
+		String sql = "SELECT * FROM khachhang"; // Truy vấn SQL để lấy tất cả các khách hàng
+
+		if (conn != null) {
+			try {
+				PreparedStatement stmt = conn.prepareStatement(sql); // Chuẩn bị câu lệnh SQL
+				ResultSet rs = stmt.executeQuery(); // Thực thi truy vấn và nhận kết quả
+				while (rs.next()) {
+					// Chuyển kết quả từ ResultSet thành đối tượng KhachHang
+					KhachHang kh = new KhachHang();
+					kh.setMaKhachHang(rs.getString("maKhachHang"));
+					kh.setTenKhachHang(rs.getString("tenKhachHang"));
+					kh.setTaiKhoan(rs.getString("taiKhoan"));
+					kh.setMatKhau(rs.getString("matKhau"));
+					kh.setSoDienThoai(rs.getString("soDienThoai"));
+					kh.setNgaySinh(rs.getDate("ngaySinh"));
+					kh.setGioiTinh(rs.getBoolean("gioiTinh"));
+					kh.setSoCCCD(rs.getString("soCCCD"));
+
+					ds.add(kh); // Thêm đối tượng KhachHang vào danh sách
+				}
+				conn.close(); // Đóng kết nối
+			} catch (Exception e) {
+				e.printStackTrace(); // In lỗi nếu có
+			}
+		}
+		return ds; // Trả về danh sách khách hàng
 	}
 
 	@Override

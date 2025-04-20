@@ -219,7 +219,7 @@ body {
 							<p>
 								<strong>Thời gian sử dụng:</strong>
 								<%=dp.getTgSuDung()%>
-								giờ
+								ngày
 							</p>
 							<p>
 								<strong>Ghi chú:</strong>

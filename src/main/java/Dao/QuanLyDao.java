@@ -32,7 +32,35 @@ public class QuanLyDao implements InterfaceDao<QuanLy> {
 
 	@Override
 	public List<QuanLy> layDanhSach() {
-		return null;
+		List<QuanLy> ds = new ArrayList<>();
+		Connection conn = JDBCUtil.connect(); // Kết nối với cơ sở dữ liệu
+		String sql = "SELECT * FROM quanly"; // Truy vấn SQL để lấy tất cả các quản lý
+
+		if (conn != null) {
+			try {
+				PreparedStatement stmt = conn.prepareStatement(sql); // Chuẩn bị câu lệnh SQL
+				ResultSet rs = stmt.executeQuery(); // Thực thi truy vấn và nhận kết quả
+				while (rs.next()) {
+					// Chuyển kết quả từ ResultSet thành đối tượng QuanLy
+					QuanLy ql = new QuanLy();
+					ql.setMaQuanLy(rs.getString("maQuanLy"));
+					ql.setTenQuanLy(rs.getString("tenQuanLy"));
+					ql.setSoDienThoai(rs.getString("soDienThoai"));
+					ql.setEmail(rs.getString("email"));
+					ql.setTaiKhoan(rs.getString("taiKhoan"));
+					ql.setMatKhau(rs.getString("matKhau"));
+					ql.setNgaySinh(rs.getDate("ngaySinh"));
+					ql.setGioiTinh(rs.getBoolean("gioiTinh"));
+					ql.setSoCCCD(rs.getString("soCCCD"));
+
+					ds.add(ql); // Thêm đối tượng QuanLy vào danh sách
+				}
+				conn.close(); // Đóng kết nối
+			} catch (Exception e) {
+				e.printStackTrace(); // In lỗi nếu có
+			}
+		}
+		return ds; // Trả về danh sách quản lý
 	}
 
 	@Override

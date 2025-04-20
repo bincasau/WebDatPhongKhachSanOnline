@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import Dao.SHA1;
 import Util.JDBCUtil;
 import model.KhachHang;
+import model.QuanTriVien;
 
 /**
  * Servlet implementation class DangNhapServlet
@@ -43,6 +44,31 @@ public class DangNhapServlet extends HttpServlet {
 		String url = "";
 		if(conn!=null) {
 			try {
+				String sql = "select * from quantrivien where taiKhoan = ? and matKhau = ?";
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, taiKhoan);
+				stmt.setString(2, SHA1.toSHA1(matKhau));
+				ResultSet rs = stmt.executeQuery();
+				if(rs.next()) {
+					HttpSession session = request.getSession();
+					QuanTriVien qtv = new QuanTriVien(rs.getString("maQuanTriVien"), 
+														rs.getString("taiKhoan"), 
+														rs.getString("matKhau"), 
+														rs.getString("hoTen"), 
+														rs.getString("soDienThoai"), 
+														rs.getDate("ngaySinh"), 
+														rs.getBoolean("gioiTinh"), 
+														rs.getString("soCCCD"));
+					session.setAttribute("quanTriVien", qtv);
+					url = "/QTVGiaoDien.jsp";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(url == "" && conn!=null) {
+			try {
 				String sql = "select * from khachhang where taiKhoan = ? and matKhau = ?";
 				PreparedStatement stmt = conn.prepareStatement(sql);
 				stmt.setString(1, taiKhoan);
@@ -68,9 +94,9 @@ public class DangNhapServlet extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
-	        rd.forward(request, response);
 		}
+		RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
+        rd.forward(request, response);
 		
 	}
 
