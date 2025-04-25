@@ -15,9 +15,60 @@ public class QuanLyDao implements InterfaceDao<QuanLy> {
 		return new QuanLyDao();
 	}
 
+	public static String getNextMaQuanLy() {
+		Connection conn = JDBCUtil.connect();
+		String nextMaQL = "QL001"; // Mã mặc định nếu bảng rỗng
+		String sql = "SELECT MAX(maQuanLy) FROM quanly";
+
+		if (conn != null) {
+			try {
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery();
+				if (rs.next()) {
+					String lastMaQL = rs.getString(1);
+					if (lastMaQL != null) {
+						int num = Integer.parseInt(lastMaQL.substring(2)) + 1;
+						nextMaQL = String.format("QL%03d", num);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				JDBCUtil.closeConnection();
+			}
+		}
+		return nextMaQL;
+	}
+	
 	@Override
 	public int themDoiTuong(QuanLy t) {
-		return 0;
+		Connection conn = JDBCUtil.connect();
+		int row = 0;
+		String sql = "INSERT INTO quanly VALUES (?, ? ,? ,? ,? ,? ,? ,?, ?)";
+
+		if (conn != null) {
+			try {
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, t.getMaQuanLy());
+				stmt.setString(2, t.getTenQuanLy());
+				stmt.setString(3, t.getSoDienThoai());
+				stmt.setString(4, t.getEmail());
+				stmt.setString(5, t.getTaiKhoan());
+				stmt.setString(6, t.getMatKhau());
+				stmt.setDate(7, t.getNgaySinh());
+				stmt.setBoolean(8, t.isGioiTinh());
+				stmt.setString(9, t.getSoCCCD());
+				
+				row = stmt.executeUpdate();
+				System.out.println(row);
+			} catch (Exception e) {
+				System.out.println(row);
+				e.printStackTrace();
+			} finally {
+				JDBCUtil.closeConnection();
+			}
+		}
+		return row;
 	}
 
 	@Override
@@ -65,7 +116,35 @@ public class QuanLyDao implements InterfaceDao<QuanLy> {
 
 	@Override
 	public List<QuanLy> layDanhSachTheoDK(String dk) {
-		return null;
+		List<QuanLy> ds = new ArrayList<>();
+		Connection conn = JDBCUtil.connect();
+		String sql = "SELECT * FROM quanly WHERE taiKhoan = ?";
+
+		if (conn != null) {
+			try {
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, dk);
+				ResultSet rs = stmt.executeQuery();
+				while (rs.next()) {
+					QuanLy ql = new QuanLy();
+					ql.setMaQuanLy(rs.getString("maQuanLy"));
+					ql.setTenQuanLy(rs.getString("tenQuanLy"));
+					ql.setSoDienThoai(rs.getString("soDienThoai"));
+					ql.setEmail(rs.getString("email"));
+					ql.setTaiKhoan(rs.getString("taiKhoan"));
+					ql.setMatKhau(rs.getString("matKhau"));
+					ql.setNgaySinh(rs.getDate("ngaySinh"));
+					ql.setGioiTinh(rs.getBoolean("gioiTinh"));
+					ql.setSoCCCD(rs.getString("soCCCD"));
+
+					ds.add(ql);
+				}
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return ds;
 	}
 
 	// Lấy danh sách quản lý theo mã khách sạn

@@ -82,5 +82,11 @@ public class QuanLy {
 	public void setSoCCCD(String soCCCD) {
 		this.soCCCD = soCCCD;
 	}
+	@Override
+	public String toString() {
+		return "QuanLy [maQuanLy=" + maQuanLy + ", tenQuanLy=" + tenQuanLy + ", soDienThoai=" + soDienThoai + ", email="
+				+ email + ", taiKhoan=" + taiKhoan + ", matKhau=" + matKhau + ", ngaySinh=" + ngaySinh + ", gioiTinh="
+				+ gioiTinh + ", soCCCD=" + soCCCD + "]";
+	}
 	
 }
