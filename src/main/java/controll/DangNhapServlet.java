@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import Dao.SHA1;
 import Util.JDBCUtil;
 import model.KhachHang;
+import model.QuanLy;
 import model.QuanTriVien;
 
 /**
@@ -61,6 +62,32 @@ public class DangNhapServlet extends HttpServlet {
 														rs.getString("soCCCD"));
 					session.setAttribute("quanTriVien", qtv);
 					url = "/QTVGiaoDien.jsp";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(url == "" && conn!=null) {
+			try {
+				String sql = "select * from quanly where taiKhoan = ? and matKhau = ?";
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, taiKhoan);
+				stmt.setString(2, SHA1.toSHA1(matKhau));
+				ResultSet rs = stmt.executeQuery();
+				if(rs.next()) {
+					HttpSession session = request.getSession();
+					QuanLy ql = new QuanLy(rs.getString("maQuanLy"), 
+											rs.getString("tenQuanLy"),
+											rs.getString("soDienThoai"), 
+											rs.getString("email"), 
+											rs.getString("taiKhoan"), 
+											rs.getString("matKhau"), 
+											rs.getDate("ngaySinh"), 
+											rs.getBoolean("gioiTinh"),
+											rs.getString("soCCCD"));
+					session.setAttribute("quanLy", ql);
+					url = "/QLGiaoDien.jsp";
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -73,13 +73,55 @@ public class QuanLyDao implements InterfaceDao<QuanLy> {
 
 	@Override
 	public int xoaDoiTuong(QuanLy t) {
-		return 0;
+	    Connection conn = JDBCUtil.connect();
+	    int row = 0;
+	    String sql = "DELETE FROM quanly WHERE maQuanLy = ?";
+
+	    if (conn != null) {
+	        try {
+	            PreparedStatement stmt = conn.prepareStatement(sql);
+	            stmt.setString(1, t.getMaQuanLy());
+
+	            row = stmt.executeUpdate();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            JDBCUtil.closeConnection();
+	        }
+	    }
+
+	    return row;
 	}
 
-	@Override
-	public int capNhatDoiTuong(QuanLy t) {
-		return 0;
-	}
+	 @Override
+	    public int capNhatDoiTuong(QuanLy t) {
+	        Connection conn = JDBCUtil.connect();
+	        int row = 0;
+	        String sql = "UPDATE quanly SET tenQuanLy = ?, soDienThoai = ?, email = ?, taiKhoan = ?, matKhau = ?, ngaySinh = ?, gioiTinh = ?, soCCCD = ? WHERE maQuanLy = ?";
+
+	        if (conn != null) {
+	            try {
+	                PreparedStatement stmt = conn.prepareStatement(sql);
+	                stmt.setString(1, t.getTenQuanLy());
+	                stmt.setString(2, t.getSoDienThoai());
+	                stmt.setString(3, t.getEmail());
+	                stmt.setString(4, t.getTaiKhoan());
+	                stmt.setString(5, t.getMatKhau());
+	                stmt.setDate(6, t.getNgaySinh());
+	                stmt.setBoolean(7, t.isGioiTinh());
+	                stmt.setString(8, t.getSoCCCD());
+	                stmt.setString(9, t.getMaQuanLy());
+
+	                row = stmt.executeUpdate();
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            } finally {
+	                JDBCUtil.closeConnection();
+	            }
+	        }
+	        return row;
+	    }
+
 
 	@Override
 	public List<QuanLy> layDanhSach() {
@@ -179,5 +221,36 @@ public class QuanLyDao implements InterfaceDao<QuanLy> {
 		}
 		return ds;
 	}
+		public List<QuanLy> layDanhSachTheoID(String id) {
+			List<QuanLy> ds = new ArrayList<>();
+			Connection conn = JDBCUtil.connect();
+			String sql = "SELECT * FROM quanly WHERE maQuanLy = ?";
+
+			if (conn != null) {
+				try {
+					PreparedStatement stmt = conn.prepareStatement(sql);
+					stmt.setString(1, id);
+					ResultSet rs = stmt.executeQuery();
+					while (rs.next()) {
+						QuanLy ql = new QuanLy();
+						ql.setMaQuanLy(rs.getString("maQuanLy"));
+						ql.setTenQuanLy(rs.getString("tenQuanLy"));
+						ql.setSoDienThoai(rs.getString("soDienThoai"));
+						ql.setEmail(rs.getString("email")); // Thêm dòng này để lấy email
+						ql.setTaiKhoan(rs.getString("taiKhoan"));
+						ql.setMatKhau(rs.getString("matKhau"));
+						ql.setNgaySinh(rs.getDate("ngaySinh"));
+						ql.setGioiTinh(rs.getBoolean("gioiTinh"));
+						ql.setSoCCCD(rs.getString("soCCCD"));
+
+						ds.add(ql);
+					}
+					conn.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return ds;
+		}
 
 }

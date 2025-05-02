@@ -85,14 +85,14 @@ h1, h2 {
 			</span> <a class="btn btn-danger btn-sm" href="DangXuatServlet">Đăng
 				xuất</a>
 		</div>
-		</div>
 	</nav>
 
 	<!-- Tabs -->
 	<ul class="nav nav-tabs mb-4" id="systemTab" role="tablist">
 		<li class="nav-item">
 			<button class="nav-link active" id="hotel-tab" data-bs-toggle="tab"
-				data-bs-target="#hotel" type="button" role="tab">Khách sạn</button>
+				data-bs-target="#hotel" type="button" role=" naturelles">Khách
+				sạn</button>
 		</li>
 		<li class="nav-item">
 			<button class="nav-link" id="manager-tab" data-bs-toggle="tab"
@@ -107,7 +107,6 @@ h1, h2 {
 
 	<div class="tab-content" id="systemTabContent">
 
-		<!-- Khách sạn -->
 		<!-- Khách sạn -->
 		<div class="tab-pane fade show active" id="hotel" role="tabpanel"
 			aria-labelledby="hotel-tab">
@@ -156,11 +155,14 @@ h1, h2 {
 							<td><%=ks.getMoTa()%></td>
 							<td><%=ks.getMaQuanLy()%></td>
 							<td class="action-buttons"><a
+								href="QTVXemPhong.jsp?id=<%=ks.getMaKhachSan()%>"
+								class="btn btn-sm btn-info">Xem</a> <a
 								href="SuaKhachSan.jsp?id=<%=ks.getMaKhachSan()%>"
 								class="btn btn-sm btn-warning">Sửa</a> <a href="#"
 								class="btn btn-sm btn-danger" data-bs-toggle="modal"
 								data-bs-target="#confirmDeleteModal"
-								data-id="<%=ks.getMaKhachSan()%>"> Xóa </a></td>
+								data-id="<%=ks.getMaKhachSan()%>" data-type="hotel">Xóa</a></td>
+
 						</tr>
 						<%
 						}
@@ -176,7 +178,6 @@ h1, h2 {
 			}
 			%>
 		</div>
-
 
 		<!-- Quản lý -->
 		<div class="tab-pane fade" id="manager" role="tabpanel"
@@ -226,12 +227,11 @@ h1, h2 {
 							<td><%=ql.isGioiTinh() ? "Nam" : "Nữ"%></td>
 							<td><%=ql.getSoCCCD()%></td>
 							<td class="action-buttons"><a
-								href="editManager.jsp?id=<%=ql.getMaQuanLy()%>"
-								class="btn btn-sm btn-primary">Sửa</a> <a
-								href="deleteManager.jsp?id=<%=ql.getMaQuanLy()%>"
-								class="btn btn-sm btn-danger"
-								onclick="return confirm('Bạn có chắc chắn muốn xóa quản lý này?');">Xóa</a>
-							</td>
+								href="SuaQuanLy.jsp?id=<%=ql.getMaQuanLy()%>"
+								class="btn btn-sm btn-primary">Sửa</a> <a href="#"
+								class="btn btn-sm btn-danger" data-bs-toggle="modal"
+								data-bs-target="#confirmDeleteModal"
+								data-id="<%=ql.getMaQuanLy()%>" data-type="manager">Xóa</a></td>
 						</tr>
 						<%
 						}
@@ -255,8 +255,7 @@ h1, h2 {
 			List<KhachHang> dsKhachHang = KhachHangDao.getInstance().layDanhSach();
 			%>
 
-			<a href="DangKy.jsp" class="button mb-3 d-inline-block">+ Thêm
-				Khách hàng</a>
+			<!-- Đã xóa nút Thêm Khách hàng -->
 
 			<div class="mb-3">
 				<input type="text" id="searchCustomer" class="form-control"
@@ -294,11 +293,12 @@ h1, h2 {
 							<td><%=kh.isGioiTinh() ? "Nam" : "Nữ"%></td>
 							<td><%=kh.getSoCCCD()%></td>
 							<td class="action-buttons"><a
-								href="editCustomer.jsp?id=<%=kh.getMaKhachHang()%>"
-								class="btn btn-sm btn-warning">Sửa</a> <a
-								href="deleteCustomer.jsp?id=<%=kh.getMaKhachHang()%>"
-								class="btn btn-sm btn-danger"
-								onclick="return confirm('Bạn có chắc chắn muốn xóa khách hàng này?');">Xóa</a>
+								href="LichSuDatPhongServlet?id=<%=kh.getMaKhachHang()%>"
+								class="btn btn-sm btn-info">Xem đặt phòng</a> <a href="#"
+								class="btn btn-sm btn-danger" data-bs-toggle="modal"
+								data-bs-target="#confirmDeleteModal"
+								data-id="<%=kh.getMaKhachHang()%>" data-type="customer">Xóa</a>
+
 							</td>
 						</tr>
 						<%
@@ -316,74 +316,95 @@ h1, h2 {
 			%>
 		</div>
 
-	</div>
 
-	<!-- Bootstrap Bundle -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- Bootstrap Bundle -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-	<!-- Search chỉ theo tên -->
-	<script>
-		function searchTableByName(inputId, tableId, nameColIndex) {
-			var input = document.getElementById(inputId);
-			input.addEventListener("keyup",
-					function() {
-						var filter = input.value.toUpperCase();
-						var rows = document.getElementById(tableId)
-								.getElementsByTagName("tr");
-						for (var i = 0; i < rows.length; i++) {
-							var cols = rows[i].getElementsByTagName("td");
-							if (cols.length > nameColIndex) {
-								var nameCell = cols[nameColIndex];
-								if (nameCell.innerText.toUpperCase().indexOf(
-										filter) > -1) {
-									rows[i].style.display = "";
-								} else {
-									rows[i].style.display = "none";
-								}
+		<!-- Search chỉ theo tên -->
+		<script>
+			function searchTableByName(inputId, tableId, nameColIndex) {
+				var input = document.getElementById(inputId);
+				input.addEventListener("keyup", function() {
+					var filter = input.value.toUpperCase();
+					var rows = document.getElementById(tableId)
+							.getElementsByTagName("tr");
+					for (var i = 0; i < rows.length; i++) {
+						var cols = rows[i].getElementsByTagName("td");
+						if (cols.length > nameColIndex) {
+							var nameCell = cols[nameColIndex];
+							if (nameCell.innerText.toUpperCase()
+									.indexOf(filter) > -1) {
+								rows[i].style.display = "";
+							} else {
+								rows[i].style.display = "none";
 							}
 						}
-					});
-		}
+					}
+				});
+			}
 
-		// Gọi hàm cho từng bảng
-		searchTableByName("searchHotel", "hotelTable", 2); // Tên khách sạn ở cột 2
-		searchTableByName("searchManager", "managerTable", 1); // Tên quản lý ở cột 1
-		searchTableByName("searchCustomer", "customerTable", 1); // Tên khách hàng ở cột 1
-	</script>
-	<!-- Modal xác nhận xóa khách sạn -->
-	<div class="modal fade" id="confirmDeleteModal" tabindex="-1"
-		aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận
-						xóa</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Đóng"></button>
-				</div>
-				<div class="modal-body">Bạn có chắc chắn muốn xóa khách sạn
-					này?</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Hủy</button>
-					<a id="confirmDeleteBtn" class="btn btn-danger" href="#">Xóa</a>
+			// Gọi hàm cho từng bảng
+			searchTableByName("searchHotel", "hotelTable", 2); // Tên khách sạn ở cột 2
+			searchTableByName("searchManager", "managerTable", 1); // Tên quản lý ở cột 1
+			searchTableByName("searchCustomer", "customerTable", 1); // Tên khách hàng ở cột 1
+		</script>
+
+		<!-- Modal xác nhận xóa -->
+		<div class="modal fade" id="confirmDeleteModal" tabindex="-1"
+			aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận
+							xóa</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Đóng"></button>
+					</div>
+					<div class="modal-body">
+						Bạn có chắc chắn muốn xóa <span id="deleteEntity"></span> này?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Hủy</button>
+						<a id="confirmDeleteBtn" class="btn btn-danger" href="#">Xóa</a>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			var deleteModal = document.getElementById('confirmDeleteModal');
-			var confirmBtn = document.getElementById('confirmDeleteBtn');
 
-			deleteModal.addEventListener('show.bs.modal', function(event) {
-				var button = event.relatedTarget;
-				var id = button.getAttribute('data-id');
-				confirmBtn.href = 'QTVXoaKhachSanServlet?id=' + id;
-			});
-		});
-	</script>
+		<!-- JavaScript xử lý modal -->
+		<script>
+			document.addEventListener("DOMContentLoaded",
+					function() {
+						var deleteModal = document
+								.getElementById('confirmDeleteModal');
+						var confirmBtn = document
+								.getElementById('confirmDeleteBtn');
+						var entitySpan = document
+								.getElementById('deleteEntity');
 
+						deleteModal.addEventListener('show.bs.modal', function(
+								event) {
+							var button = event.relatedTarget;
+							var id = button.getAttribute('data-id');
+							var type = button.getAttribute('data-type');
+
+							if (type === 'manager') {
+								entitySpan.textContent = 'quản lý';
+								confirmBtn.href = 'QTVXoaQuanLyServlet?id='
+										+ id;
+							} else if (type === 'customer') {
+								entitySpan.textContent = 'khách hàng';
+								confirmBtn.href = 'QTVXoaKhachHangServlet?id='
+										+ id;
+							} else {
+								entitySpan.textContent = 'khách sạn';
+								confirmBtn.href = 'QTVXoaKhachSanServlet?id='
+										+ id;
+							}
+						});
+					});
+		</script>
 </body>
 </html>

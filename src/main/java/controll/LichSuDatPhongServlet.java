@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import Dao.ThongTinDatPhongDao;
 import model.KhachHang;
+import model.QuanTriVien;
 import model.ThongTinDatPhong;
 
 /**
@@ -32,20 +33,40 @@ public class LichSuDatPhongServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
+        QuanTriVien qtv = (QuanTriVien) session.getAttribute("quanTriVien");
         KhachHang kh = (KhachHang) session.getAttribute("khachHang");
-        if (kh == null) {
-            response.sendRedirect("DangNhap.jsp");
-            return;
+
+        // Trường hợp là quản trị viên
+        if (qtv != null) {
+            String maKH = request.getParameter("id"); // Lấy mã khách hàng cần xem
+            if (maKH != null && !maKH.isEmpty()) {
+                List<ThongTinDatPhong> lichSu = ThongTinDatPhongDao.getInstance().layDanhSachTheoDK(maKH);
+                request.setAttribute("lichSuDatPhong", lichSu);
+                request.getRequestDispatcher("LichSuDatPhongQTV.jsp").forward(request, response);
+                return;
+            } else {
+                response.sendRedirect("QTVGiaoDien.jsp"); // hoặc trang admin nào đó
+                return;
+            }
         }
 
-        List<ThongTinDatPhong> lichSu = ThongTinDatPhongDao.getInstance().layDanhSachTheoDK(kh.getMaKhachHang());
-        request.setAttribute("lichSuDatPhong", lichSu);
-        String message = request.getAttribute("message")+"";
-        request.setAttribute("message", message);
-        request.getRequestDispatcher("LichSuDatPhong.jsp").forward(request, response);
-	}
+        // Trường hợp là khách hàng
+        if (kh != null) {
+            List<ThongTinDatPhong> lichSu = ThongTinDatPhongDao.getInstance().layDanhSachTheoDK(kh.getMaKhachHang());
+            request.setAttribute("lichSuDatPhong", lichSu);
+
+            String message = (String) request.getAttribute("message");
+            request.setAttribute("message", message != null ? message : "");
+
+            request.getRequestDispatcher("LichSuDatPhong.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("DangNhap.jsp");
+        }
+    }
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
