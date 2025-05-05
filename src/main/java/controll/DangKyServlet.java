@@ -80,7 +80,6 @@ public class DangKyServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(url);
 		RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
 	}
