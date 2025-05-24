@@ -11,6 +11,6 @@ import model.ThongTinDatPhong;
 
 public class test {
 	public static void main(String[] args) {
-		System.out.println(PhongDao.getNextMaPh("KS002"));
+		System.out.println();
 	}
 }
