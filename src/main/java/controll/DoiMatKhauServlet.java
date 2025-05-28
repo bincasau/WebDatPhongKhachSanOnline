@@ -42,14 +42,12 @@ public class DoiMatKhauServlet extends HttpServlet {
 		    String xacNhanMatKhauMoi = request.getParameter("xacNhanMatKhauMoi");
 		    System.out.println(matKhauCu);
 		    try {
-				if (!SHA1.toSHA1(matKhauCu.trim()).equals(kh.getMatKhau())) {
+				if (!(matKhauCu.trim()).equals(kh.getMatKhau()) ) {
 				    message = "Mật khẩu hiện tại không chính xác!";
 				    request.setAttribute("message", message);
 				    request.getRequestDispatcher("DoiMatKhau.jsp").forward(request, response);
 				    return;
 				}
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
 			} catch (ServletException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

@@ -1,3 +1,4 @@
+<%@page import="java.util.Collections"%>
 <%@page import="Dao.ThongTinDanhGiaDao"%>
 <%@page import="model.ThongTinDanhGia"%>
 <%@page import="Dao.PhongDao"%>
@@ -160,6 +161,8 @@ body {
 		<h2 class="fw-bold mt-5">Đánh giá từ khách hàng</h2>
 		<%
 		if (dsDanhGia != null && !dsDanhGia.isEmpty()) {
+			Collections.reverse(dsDanhGia); 
+
 		%>
 		<div class="row">
 			<%

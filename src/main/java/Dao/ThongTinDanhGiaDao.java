@@ -19,7 +19,7 @@ public class ThongTinDanhGiaDao implements InterfaceDao<ThongTinDanhGia> {
     }
 
     public static String getNextMaDanhGia() throws SQLException {
-        String nextMaDG = "D0001"; // Mã mặc định nếu bảng rỗng
+        String nextMaDG = "DG0001";
         String sql = "SELECT MAX(maDanhGia) FROM thongtindanhgia";
 
         try (Connection conn = JDBCUtil.connect();
@@ -28,256 +28,218 @@ public class ThongTinDanhGiaDao implements InterfaceDao<ThongTinDanhGia> {
 
             if (rs.next()) {
                 String lastMaDG = rs.getString(1);
-                if (lastMaDG != null && lastMaDG.matches("D\\d{4}")) {
-                    int num = Integer.parseInt(lastMaDG.substring(1)) + 1;
-                    nextMaDG = String.format("D%04d", num);
+                if (lastMaDG != null && lastMaDG.matches("DG\\d{4}")) {
+                    int num = Integer.parseInt(lastMaDG.substring(2)) + 1;
+                    nextMaDG = String.format("DG%04d", num);
                 }
             }
+            return nextMaDG;
+
         } catch (SQLException e) {
             throw new SQLException("Lỗi khi tạo mã đánh giá: " + e.getMessage(), e);
         }
-
-        return nextMaDG;
     }
+
 
     @Override
     public int themDoiTuong(ThongTinDanhGia t) {
-        String sql = "INSERT INTO thongtindanhgia (maDanhGia, soSao, moTa, maKhachHang, maKhachSan) VALUES (?, ?, ?, ?, ?)";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        int rowsAffected = 0;
-
-        try {
-            conn = JDBCUtil.connect();
-            if (conn != null) {
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, t.getMaDanhGia());
-                stmt.setInt(2, t.getSoSao());
-                stmt.setString(3, t.getMoTa());
-                stmt.setString(4, t.getMaKhachHang());
-                stmt.setString(5, t.getMaKhachSan());
-
-                rowsAffected = stmt.executeUpdate();
-            }
-        } catch (Exception e) {
+        String sql = "INSERT INTO thongtindanhgia (maDanhGia, soSao, moTa, ngayDanhGia, maKhachHang, maKhachSan) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, t.getMaDanhGia());
+            stmt.setInt(2, t.getSoSao());
+            stmt.setString(3, t.getMoTa());
+            stmt.setDate(4, t.getNgayDanhGia());
+            stmt.setString(5, t.getMaKhachHang());
+            stmt.setString(6, t.getMaKhachSan());
+            return stmt.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null)
-                    stmt.close();
-                if (conn != null)
-                    conn.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            JDBCUtil.closeConnection();
+            return 0;
         }
-
-        return rowsAffected;
     }
 
     @Override
     public int xoaDoiTuong(ThongTinDanhGia t) {
         String sql = "DELETE FROM thongtindanhgia WHERE maDanhGia = ?";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        int rowsAffected = 0;
-
-        try {
-            conn = JDBCUtil.connect();
-            if (conn != null) {
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, t.getMaDanhGia());
-
-                rowsAffected = stmt.executeUpdate();
-            }
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, t.getMaDanhGia());
+            return stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null)
-                    stmt.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            JDBCUtil.closeConnection();
+            return 0;
         }
-
-        return rowsAffected;
     }
 
     @Override
     public int capNhatDoiTuong(ThongTinDanhGia t) {
-        // TODO Auto-generated method stub
-        return 0;
+        String sql = "UPDATE thongtindanhgia SET soSao = ?, moTa = ?, ngayDanhGia = ?, maKhachHang = ?, maKhachSan = ? WHERE maDanhGia = ?";
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, t.getSoSao());
+            stmt.setString(2, t.getMoTa());
+            stmt.setDate(3, t.getNgayDanhGia());
+            stmt.setString(4, t.getMaKhachHang());
+            stmt.setString(5, t.getMaKhachSan());
+            stmt.setString(6, t.getMaDanhGia());
+            return stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @Override
     public List<ThongTinDanhGia> layDanhSach() {
-        // TODO Auto-generated method stub
-        return null;
+        List<ThongTinDanhGia> ds = new ArrayList<>();
+        String sql = "SELECT * FROM thongtindanhgia";
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ThongTinDanhGia danhGia = new ThongTinDanhGia(
+                    rs.getString("maDanhGia"),
+                    rs.getInt("soSao"),
+                    rs.getString("moTa"),
+                    rs.getDate("ngayDanhGia"),
+                    rs.getString("maKhachHang"),
+                    rs.getString("maKhachSan")
+                );
+                ds.add(danhGia);
+            }
+            return ds;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ds;
+        }
     }
 
     @Override
-    public List<ThongTinDanhGia> layDanhSachTheoDK(String dk) {
+    public List<ThongTinDanhGia> layDanhSachTheoDK(String maKhachSan) {
         List<ThongTinDanhGia> ds = new ArrayList<>();
         String sql = "SELECT * FROM thongtindanhgia WHERE maKhachSan = ?";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            conn = JDBCUtil.connect();
-            if (conn != null) {
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, dk);
-                rs = stmt.executeQuery();
-
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maKhachSan);
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    String maDanhGia = rs.getString("maDanhGia");
-                    int soSao = rs.getInt("soSao");
-                    String moTa = rs.getString("moTa");
-                    String maKhachHang = rs.getString("maKhachHang");
-                    String maKhachSan = rs.getString("maKhachSan");
-
-                    ThongTinDanhGia danhGia = new ThongTinDanhGia(maDanhGia, soSao, moTa, maKhachHang, maKhachSan);
+                    ThongTinDanhGia danhGia = new ThongTinDanhGia(
+                        rs.getString("maDanhGia"),
+                        rs.getInt("soSao"),
+                        rs.getString("moTa"),
+                        rs.getDate("ngayDanhGia"),
+                        rs.getString("maKhachHang"),
+                        rs.getString("maKhachSan")
+                    );
                     ds.add(danhGia);
                 }
             }
-        } catch (Exception e) {
+            return ds;
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (stmt != null)
-                    stmt.close();
-                if (conn != null)
-                    conn.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            return ds;
         }
-
-        return ds;
     }
 
     public int tinhSoLuongDanhGia(String maKhachSan) {
-        int soLuong = 0;
         String sql = "SELECT COUNT(*) as total FROM thongtindanhgia WHERE maKhachSan = ?";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            conn = JDBCUtil.connect();
-            if (conn != null) {
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, maKhachSan);
-                rs = stmt.executeQuery();
-
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maKhachSan);
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    soLuong = rs.getInt("total");
+                    return rs.getInt("total");
                 }
             }
+            return 0;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (stmt != null)
-                    stmt.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            JDBCUtil.closeConnection();
+            return 0;
         }
-
-        return soLuong;
     }
 
     public double tinhDiemTrungBinh(String maKhachSan) {
-        double diemTrungBinh = 0;
         String sql = "SELECT AVG(soSao) as avg FROM thongtindanhgia WHERE maKhachSan = ?";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            conn = JDBCUtil.connect();
-            if (conn != null) {
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, maKhachSan);
-                rs = stmt.executeQuery();
-
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maKhachSan);
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    diemTrungBinh = rs.getDouble("avg");
+                    return rs.getDouble("avg");
                 }
             }
+            return 0.0;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (stmt != null)
-                    stmt.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            JDBCUtil.closeConnection();
+            return 0.0;
         }
-
-        return diemTrungBinh;
     }
 
     public Map<Integer, Integer> tinhPhanBoDanhGia(String maKhachSan) {
         Map<Integer, Integer> phanBo = new HashMap<>();
         for (int i = 1; i <= 5; i++) {
-            phanBo.put(i, 0); // Initialize counts for 1-5 stars
+            phanBo.put(i, 0);
         }
-
         String sql = "SELECT soSao, COUNT(*) as count FROM thongtindanhgia WHERE maKhachSan = ? GROUP BY soSao";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            conn = JDBCUtil.connect();
-            if (conn != null) {
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, maKhachSan);
-                rs = stmt.executeQuery();
-
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maKhachSan);
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int soSao = rs.getInt("soSao");
                     int count = rs.getInt("count");
                     phanBo.put(soSao, count);
                 }
             }
+            return phanBo;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (stmt != null)
-                    stmt.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            JDBCUtil.closeConnection();
+            return phanBo;
         }
+    }
 
-        return phanBo;
+    // Thêm phương thức tính số lượng đánh giá theo tháng
+    public List<Object[]> tinhSoLuongDanhGiaTheoThang(String maKhachSan, String year) {
+        List<Object[]> result = new ArrayList<>();
+        String sql = "SELECT MONTH(ngayDanhGia) as month, COUNT(*) as total " +
+                     "FROM thongtindanhgia WHERE maKhachSan = ? AND YEAR(ngayDanhGia) = ? " +
+                     "GROUP BY MONTH(ngayDanhGia) ORDER BY month";
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maKhachSan);
+            stmt.setString(2, year);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new Object[]{rs.getInt("month"), rs.getInt("total")});
+                }
+            }
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return result;
+        }
+    }
+
+    // Thêm phương thức tính điểm trung bình theo tháng
+    public List<Object[]> tinhDiemTrungBinhTheoThang(String maKhachSan, String year) {
+        List<Object[]> result = new ArrayList<>();
+        String sql = "SELECT MONTH(ngayDanhGia) as month, AVG(soSao) as avg " +
+                     "FROM thongtindanhgia WHERE maKhachSan = ? AND YEAR(ngayDanhGia) = ? " +
+                     "GROUP BY MONTH(ngayDanhGia) ORDER BY month";
+        try (Connection conn = JDBCUtil.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maKhachSan);
+            stmt.setString(2, year);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new Object[]{rs.getInt("month"), rs.getDouble("avg")});
+                }
+            }
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return result;
+        }
     }
 }

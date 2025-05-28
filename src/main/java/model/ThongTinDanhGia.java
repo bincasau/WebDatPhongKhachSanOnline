@@ -1,19 +1,24 @@
 package model;
 
+import java.sql.Date;
+
 public class ThongTinDanhGia {
 	private String maDanhGia;
 	private int soSao;
 	private String moTa;
+	private Date ngayDanhGia;
 	private String maKhachHang;
 	private String maKhachSan;
 	public ThongTinDanhGia() {
 		super();
 	}
-	public ThongTinDanhGia(String maDanhGia, int soSao, String moTa, String maKhachHang, String maKhachSan) {
+	public ThongTinDanhGia(String maDanhGia, int soSao, String moTa, Date ngayDanhGia, String maKhachHang,
+			String maKhachSan) {
 		super();
 		this.maDanhGia = maDanhGia;
 		this.soSao = soSao;
 		this.moTa = moTa;
+		this.ngayDanhGia = ngayDanhGia;
 		this.maKhachHang = maKhachHang;
 		this.maKhachSan = maKhachSan;
 	}
@@ -34,6 +39,12 @@ public class ThongTinDanhGia {
 	}
 	public void setMoTa(String moTa) {
 		this.moTa = moTa;
+	}
+	public Date getNgayDanhGia() {
+		return ngayDanhGia;
+	}
+	public void setNgayDanhGia(Date ngayDanhGia) {
+		this.ngayDanhGia = ngayDanhGia;
 	}
 	public String getMaKhachHang() {
 		return maKhachHang;

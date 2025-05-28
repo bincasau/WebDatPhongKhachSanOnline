@@ -65,6 +65,7 @@ public class SuaThongTinServlet extends HttpServlet {
                 kh.getMaKhachHang(), tenKhachHang, kh.getTaiKhoan(),
                 kh.getMatKhau(), soDienThoai, ngaySinh, gioiTinh, soCCCD
             );
+            System.out.println(kh.getMatKhau());
 
             // Cập nhật thông tin trong database
             int row = KhachHangDao.getInstance().capNhatDoiTuong(newKhachHang);

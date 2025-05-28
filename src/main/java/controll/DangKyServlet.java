@@ -40,6 +40,9 @@ public class DangKyServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
 		Date ngaySinh = null; 	
 		String taiKhoan = request.getParameter("taiKhoan");

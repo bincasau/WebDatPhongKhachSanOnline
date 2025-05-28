@@ -54,7 +54,7 @@ public class DangNhapServlet extends HttpServlet {
 					HttpSession session = request.getSession();
 					QuanTriVien qtv = new QuanTriVien(rs.getString("maQuanTriVien"), 
 														rs.getString("taiKhoan"), 
-														rs.getString("matKhau"), 
+														matKhau, 
 														rs.getString("hoTen"), 
 														rs.getString("soDienThoai"), 
 														rs.getDate("ngaySinh"), 
@@ -82,7 +82,7 @@ public class DangNhapServlet extends HttpServlet {
 											rs.getString("soDienThoai"), 
 											rs.getString("email"), 
 											rs.getString("taiKhoan"), 
-											rs.getString("matKhau"), 
+											matKhau, 
 											rs.getDate("ngaySinh"), 
 											rs.getBoolean("gioiTinh"),
 											rs.getString("soCCCD"));
@@ -106,7 +106,7 @@ public class DangNhapServlet extends HttpServlet {
                 	KhachHang kh = new KhachHang(rs.getString("maKhachHang"),
                 								rs.getString("tenKhachHang"),
                 								rs.getString("taiKhoan"), 
-                								rs.getString("matKhau"), 
+                								matKhau, 
                 								rs.getString("soDienThoai"), 
                 								rs.getDate("ngaySinh"), 
                 								rs.getBoolean("gioiTinh"), 
@@ -115,7 +115,7 @@ public class DangNhapServlet extends HttpServlet {
                 	url="/TrangChu.jsp";
        
                 }else {
-                	request.setAttribute("error", "Tài Khoản hoặc mật khẩu éo đúng");
+                	request.setAttribute("error", "Tài Khoản hoặc mật khẩu không đúng");
                 	url="/DangNhap.jsp";
                 }
 			} catch (Exception e) {
